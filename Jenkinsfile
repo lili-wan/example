@@ -7,84 +7,115 @@ pipeline {
                 echo "BUILD"
             }
         }
-        stage('Preprod') {
+        stage('Deploy') {
             parallel {
-                stage('qal-usw2-air') {
+                stage('AIR') {
                     stages {
-                        stage('test') {
+                        stage('get app image') {
+//                             when {
+//                                 allOf {
+//                                     branch 'master'
+//                                 }
+//                             }
                             steps {
-                                echo "test"
+                                echo 'get app image'
                             }
                         }
-                        stage('deploy') {
-                            steps {
-                                echo "deploy"
+                        stage('qal-usw2-air') {
+//                             when {
+//                                 allOf {
+//                                     branch 'master'
+//                                 }
+//                             }
+                            stages {
+                                stage('Deploy') {
+                                    steps {
+                                        echo 'deploy to qal-usw2-air'
+                                    }
+                                }
+                            }
+                        }
+                        stage('e2e-usw2-air') {
+//                             when {
+//                                 allOf {
+//                                     branch 'master'
+//                                 }
+//                             }
+                            stages {
+                                stage('Deploy') {
+                                    steps {
+                                        echo 'deploy to e2e-usw2-air'
+                                    }
+                                }
+                            }
+                        }
+                        stage('stg-usw2-air') {
+//                             when {
+//                                 allOf {
+//                                     branch 'master'
+//                                 }
+//                             }
+                            stages {
+                                stage('Deploy') {
+                                    steps {
+                                        echo 'deploy to stg-usw2-air'
+                                    }
+                                }
+                            }
+                        }
+                        stage('prd-usw2-air') {
+//                             when {
+//                                 allOf {
+//                                     branch 'master'
+//                                 }
+//                             }
+                            stages {
+                                stage('Deploy') {
+                                    steps {
+                                        echo 'deploy to stg-usw2-air'
+                                    }
+                                 }
                             }
                         }
                     }
                 }
-                stage('e2e-usw2-air') {
+                stage('CUSTOM') {
                     stages {
-                        stage('test') {
-                            steps {
-                                echo "test"
-                            }
-                        }
-                        stage('deploy') {
-                            steps {
-                                echo "deploy"
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        stage('Goto-Stage-Approval') {
-            steps {
-                echo "approval"
-            }
-        }
-        stage('Prod') {
-            parallel {
-                stage('stg-usw2-air') {
-                    stages {
-                         stage('test') {
-                             steps {
-                                 echo "test"
-                             }
-                         }
-                         stage('deploy') {
-                             steps {
-                                 echo "deploy"
-                             }
-                         }
-                    }
-                }
-                stage('prd-usw2-air') {
-                    stages {
-                        stage('Go live in Prod approval') {
-                            steps {
-                                echo "approval"
-                            }
-                        }
-                        stage('test') {
-                            steps {
-                                echo "test"
-                            }
-                        }
-                        stage('create CR') {
-                            steps {
-                                echo "test"
-                            }
-                        }
-                        stage('deploy') {
-                            steps {
-                                echo "deploy"
-                            }
-                        }
-                        stage('Close CR') {
-                            steps {
-                                echo "test"
+                        stage('BUILD:') {
+//                             when {
+//                                 anyOf {
+//                                     branch 'master'
+//                                 }
+//                             }
+                            stages {
+                                stage('Get Next Release Version') {
+                                    steps {
+                                        echo 'Get Next Release Version'
+                                    }
+                                }
+                                stage('Build App') {
+                                    parallel {
+                                        stage('Docker Multi Stage Build') {
+                                            steps {
+                                                echo 'Docker Multi Stage Build'
+                                            }
+                                        }
+                                        stage('API:') {
+                                            stages {
+                                                stage('Linting') {
+                                                    steps {
+                                                        echo 'Linting'
+                                                    }
+                                                }
+                                                stage('Merge and Flatten Spec') {
+                                                    steps {
+                                                        echo 'Merge and Flatten Spec'
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
