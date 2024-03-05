@@ -30,7 +30,7 @@ pipeline {
                             stages {
                                 stage('Deploy') {
                                     steps {
-                                        echo 'deploy to qal-usw2-air'
+                                        bat 'failed.bat'
                                     }
                                 }
                             }
