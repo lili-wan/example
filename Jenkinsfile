@@ -2,41 +2,93 @@
 pipeline {
     agent any
     stages {
-        stage('Non-Sequential Stage') {
-            steps {
-                echo "On Non-Sequential Stage"
-            }
-        }
-        stage('Sequential') {
-            environment {
-                FOR_SEQUENTIAL = "some-value"
-            }
-            stages {
-                stage('In Sequential 1') {
-                    steps {
-                        echo "In Sequential 1"
-                    }
+//         stage('Sequential') {
+//             environment {
+//                 FOR_SEQUENTIAL = "some-value"
+//             }
+        stages {
+            stage('BUILD') {
+                steps {
+                    echo "BUILD"
                 }
-                stage('In Sequential 2') {
-                    steps {
-                        echo "In Sequential 2"
-                    }
-                }
-                stage('Parallel In Sequential') {
-                    parallel {
-                        stage('In Parallel 1') {
+            }
+            stage('Preprod') {
+                parallel {
+                    stages('qal-usw2-air') {
+                        stage('test') {
                             steps {
-                                echo "In Parallel 1"
+                                echo "test"
                             }
                         }
-                        stage('In Parallel 2') {
+                        stage('deploy') {
                             steps {
-                                echo "In Parallel 2"
+                                echo "deploy"
                             }
                         }
                     }
+                    stages('e2e-usw2-air') {
+                        stage('test') {
+                            steps {
+                                echo "test"
+                            }
+                        }
+                        stage('deploy') {
+                            steps {
+                                echo "deploy"
+                            }
+                        }
+                    }
                 }
             }
+            stage('Goto-Stage-Approval') {
+                steps {
+                    echo "approval"
+                }
+            }
+            stage('Prod') {
+                parallel {
+                    stages('stg-usw2-air') {
+                        stage('test') {
+                            steps {
+                                echo "test"
+                            }
+                        }
+                        stage('deploy') {
+                            steps {
+                                echo "deploy"
+                            }
+                        }
+                    }
+                    stages('prd-usw2-air') {
+                        stage('Go live in Prod approval') {
+                            steps {
+                                echo "approval"
+                            }
+                        }
+                        stage('test') {
+                            steps {
+                                echo "test"
+                            }
+                        }
+                        stage('create CR') {
+                            steps {
+                                echo "test"
+                            }
+                        }
+                        stage('deploy') {
+                            steps {
+                                echo "deploy"
+                            }
+                        }
+                        stage('Close CR') {
+                            steps {
+                                echo "test"
+                            }
+                        }
+                    }
+                }
+            }
+            //}
         }
     }
 }
