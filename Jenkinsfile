@@ -8,6 +8,7 @@ pipeline {
             }
         }
         stage('Deploy') {
+            failFast true
             parallel {
                 stage('AIR') {
                     stages {
