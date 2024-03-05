@@ -9,27 +9,31 @@ pipeline {
         }
         stage('Preprod') {
             parallel {
-                stages('qal-usw2-air') {
-                    stage('test') {
-                        steps {
-                            echo "test"
+                stage('qal-usw2-air') {
+                    stages {
+                        stage('test') {
+                            steps {
+                                echo "test"
+                            }
                         }
-                    }
-                    stage('deploy') {
-                        steps {
-                            echo "deploy"
+                        stage('deploy') {
+                            steps {
+                                echo "deploy"
+                            }
                         }
                     }
                 }
-                stages('e2e-usw2-air') {
-                    stage('test') {
-                        steps {
-                            echo "test"
+                stage('e2e-usw2-air') {
+                    stages {
+                        stage('test') {
+                            steps {
+                                echo "test"
+                            }
                         }
-                    }
-                    stage('deploy') {
-                        steps {
-                            echo "deploy"
+                        stage('deploy') {
+                            steps {
+                                echo "deploy"
+                            }
                         }
                     }
                 }
@@ -42,42 +46,46 @@ pipeline {
         }
         stage('Prod') {
             parallel {
-                stages('stg-usw2-air') {
-                    stage('test') {
-                        steps {
-                            echo "test"
-                        }
-                    }
-                    stage('deploy') {
-                        steps {
-                            echo "deploy"
-                        }
+                stage('stg-usw2-air') {
+                    stages {
+                         stage('test') {
+                             steps {
+                                 echo "test"
+                             }
+                         }
+                         stage('deploy') {
+                             steps {
+                                 echo "deploy"
+                             }
+                         }
                     }
                 }
-                stages('prd-usw2-air') {
-                    stage('Go live in Prod approval') {
-                        steps {
-                            echo "approval"
+                stage('prd-usw2-air') {
+                    stages {
+                        stage('Go live in Prod approval') {
+                            steps {
+                                echo "approval"
+                            }
                         }
-                    }
-                    stage('test') {
-                        steps {
-                            echo "test"
+                        stage('test') {
+                            steps {
+                                echo "test"
+                            }
                         }
-                    }
-                    stage('create CR') {
-                        steps {
-                            echo "test"
+                        stage('create CR') {
+                            steps {
+                                echo "test"
+                            }
                         }
-                    }
-                    stage('deploy') {
-                        steps {
-                            echo "deploy"
+                        stage('deploy') {
+                            steps {
+                                echo "deploy"
+                            }
                         }
-                    }
-                    stage('Close CR') {
-                        steps {
-                            echo "test"
+                        stage('Close CR') {
+                            steps {
+                                echo "test"
+                            }
                         }
                     }
                 }
